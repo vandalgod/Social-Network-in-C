@@ -41,7 +41,8 @@ int is_request_already_sent(const char *sender, const char *receiver) {
     
     char s[50], r[50];
     while (fscanf(fp, "%s %s", s, r) != EOF) {
-        if (strcasecmp(s, sender) == 0 && strcasecmp(r, receiver) == 0) {
+        if ((strcasecmp(s, sender) == 0 && strcasecmp(r, receiver) == 0) ||
+            (strcasecmp(s, receiver) == 0 && strcasecmp(r, sender) == 0)) {
             fclose(fp);
             return 1;
         }
@@ -90,27 +91,22 @@ void show_and_accept_requests(const char *receiver_name) {
         return;
     }
     
-    FILE *temp = fopen("data/temp_requests.txt", "w");
-    if (!temp) {
-        fclose(fp);
-        printf("Error: Could not process friend requests.\n");
-        return;
-    }
-    
     FILE *friends_fp = fopen("data/friends.txt", "a");
     if (!friends_fp) {
         fclose(fp);
-        fclose(temp);
         printf("Error: Could not process friend requests.\n");
         return;
     }
     
     char sender[50], receiver[50];
     int found = 0;
+    char requests[100][100]; // Array to store remaining requests
+    int request_count = 0;
 
+    // First pass: process requests and collect remaining ones
     while (fscanf(fp, "%s %s", sender, receiver) != EOF) {
         if (strcasecmp(receiver, receiver_name) == 0) {
-            printf("Friend request from: %s\nAccept (y/n)? ", sender);
+            printf("\nFriend request from: %s\nAccept (y/n)? ", sender);
             char choice;
             scanf(" %c", &choice);
             if (choice == 'y' || choice == 'Y') {
@@ -123,13 +119,28 @@ void show_and_accept_requests(const char *receiver_name) {
             }
             found = 1;
         } else {
-            fprintf(temp, "%s %s\n", sender, receiver);
+            // Store remaining requests
+            sprintf(requests[request_count], "%s %s", sender, receiver);
+            request_count++;
         }
     }
 
-    fclose(fp); fclose(temp); fclose(friends_fp);
-    remove("data/requests.txt");
-    rename("data/temp_requests.txt", "data/requests.txt");
+    fclose(fp);
+    fclose(friends_fp);
+
+    // Write remaining requests back to the file
+    if (request_count > 0) {
+        fp = fopen("data/requests.txt", "w");
+        if (fp) {
+            for (int i = 0; i < request_count; i++) {
+                fprintf(fp, "%s\n", requests[i]);
+            }
+            fclose(fp);
+        }
+    } else {
+        // If no requests remain, remove the file
+        remove("data/requests.txt");
+    }
 
     if (!found) {
         printf("No pending friend requests.\n");

@@ -228,8 +228,9 @@ int login_user(char email[]) {
 
 void user_dashboard(char email[]) {
     int option;
-    char friend_name[50], search_key[50];
-
+    char search_name[50], search_email[50], search_hostel[50], search_branch[50];
+    char friend_name[50];
+    
     while (1) {
         printf("\n--- %s's Dashboard ---\n", global_user_name);
         printf("1. Send Friend Request (by name)\n");
@@ -237,14 +238,14 @@ void user_dashboard(char email[]) {
         printf("3. Post a Message\n");
         printf("4. View My Messages\n");
         printf("5. View Friends' Messages\n");
-        printf("6. Search User\n");
+        printf("6. Search Users\n");
         printf("7. View Friends\n");
         printf("8. Logout\nChoose an option: ");
         scanf("%d", &option);
 
         switch (option) {
             case 1:
-                printf("Enter Name to send friend request: ");
+                printf("Enter friend's name: ");
                 scanf("%s", friend_name);
                 send_request(global_user_name, friend_name);
                 break;
@@ -261,9 +262,50 @@ void user_dashboard(char email[]) {
                 view_friend_messages(global_user_name);
                 break;
             case 6:
-                printf("Enter search key (name/email/branch/hostel): ");
-                scanf("%s", search_key);
-                search_user(search_key);
+                printf("\n--- Search Users ---\n");
+                printf("1. Search by Name\n");
+                printf("2. Search by Email\n");
+                printf("3. Search by Hostel\n");
+                printf("4. Search by Branch\n");
+                printf("Choose search type (1-4): ");
+                
+                // Input validation for search type
+                while (1) {
+                    if (scanf("%d", &option) != 1) {
+                        printf("Invalid input! Please enter a number between 1 and 4: ");
+                        // Clear input buffer
+                        while (getchar() != '\n');
+                        continue;
+                    }
+                    if (option < 1 || option > 4) {
+                        printf("Invalid option! Please enter a number between 1 and 4: ");
+                        continue;
+                    }
+                    break;
+                }
+                
+                switch (option) {
+                    case 1:
+                        printf("Enter name to search: ");
+                        scanf("%s", search_name);
+                        search_by_name(search_name, email);
+                        break;
+                    case 2:
+                        printf("Enter email to search: ");
+                        scanf("%s", search_email);
+                        search_by_email(search_email, email);
+                        break;
+                    case 3:
+                        printf("Enter hostel to search: ");
+                        scanf("%s", search_hostel);
+                        search_by_hostel(search_hostel, email);
+                        break;
+                    case 4:
+                        printf("Enter branch to search: ");
+                        scanf("%s", search_branch);
+                        search_by_branch(search_branch, email);
+                        break;
+                }
                 break;
             case 7:
                 view_friends(global_user_name);
