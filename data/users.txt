@@ -1,2 +1,4 @@
-koushik koushik@srmap.edu.in cse v ko
-roshan roshan@srmap.edu.in eee ganga ro
+roshan roshan@srmap.edu.in cse v roshan Male Yes
+shyam shyam@srmap.edu.in eee N/A shyam Male No
+hari hari@srmap.edu.in civil g hari Male Yes
+sima sima@srmap.edu.in mechanical N/A sima Female No

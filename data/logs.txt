@@ -1,17 +1,31 @@
-koushik@srmap.edu.in: Registered successfully
-koushik@srmap.edu.in: Logged in successfully
-koushik@srmap.edu.in: Logged out
 roshan@srmap.edu.in: Registered successfully
+shyam@srmap.edu.in: Registered successfully
+roshan@srmap.edu.in: Logged in successfully
+roshan@srmap.edu.in: Logged out
+shyam@srmap.edu.in: Logged in successfully
+shyam: Sent friend request
+shyam: Posted a message
+shyam@srmap.edu.in: Logged out
+roshan@srmap.edu.in: Logged in successfully
+roshan: Accepted friend request
+roshan@srmap.edu.in: Logged out
+hari@srmap.edu.in: Registered successfully
+roshan@srmap.edu.in: Logged in successfully
+roshan@srmap.edu.in: Logged out
+shyam@srmap.edu.in: Logged in successfully
 roshan@srmap.edu.in: Logged in successfully
 roshan: Sent friend request
 roshan@srmap.edu.in: Logged out
-koushik@srmap.edu.in: Logged in successfully
-koushik: Accepted friend request
-koushik@srmap.edu.in: Logged out
-koushik@srmap.edu.in: Registered successfully
-koushik@srmap.edu.in: Logged in successfully
-koushik@srmap.edu.in: Logged out
-roshan@srmap.edu.in: Registered successfully
-koushik@srmap.edu.in: Logged in successfully
-koushik@srmap.edu.in: Logged out
-koushik@srmap.edu.in: Failed login attempt
+hari@srmap.edu.in: Logged in successfully
+hari: Accepted friend request
+hari@srmap.edu.in: Logged out
+shyam@srmap.edu.in: Logged in successfully
+shyam: Sent friend request
+shyam@srmap.edu.in: Logged out
+sima@srmap.edu.in: Registered successfully
+roshan@srmap.edu.in: Logged in successfully
+roshan: Posted a message
+roshan@srmap.edu.in: Logged out
+hari@srmap.edu.in: Logged in successfully
+sima@srmap.edu.in: Logged in successfully
+sima@srmap.edu.in: Logged in successfully
