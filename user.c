@@ -235,9 +235,11 @@ void user_dashboard(char email[]) {
         printf("1. Send Friend Request (by name)\n");
         printf("2. Accept Friend Request\n");
         printf("3. Post a Message\n");
-        printf("4. Search User\n");
-        printf("5. View Friends\n");
-        printf("6. Logout\nChoose an option: ");
+        printf("4. View My Messages\n");
+        printf("5. View Friends' Messages\n");
+        printf("6. Search User\n");
+        printf("7. View Friends\n");
+        printf("8. Logout\nChoose an option: ");
         scanf("%d", &option);
 
         switch (option) {
@@ -253,19 +255,25 @@ void user_dashboard(char email[]) {
                 post_message(global_user_name);
                 break;
             case 4:
-                printf("Enter name/email to search: ");
+                view_messages(global_user_name);
+                break;
+            case 5:
+                view_friend_messages(global_user_name);
+                break;
+            case 6:
+                printf("Enter search key (name/email/branch/hostel): ");
                 scanf("%s", search_key);
                 search_user(search_key);
                 break;
-            case 5:
+            case 7:
                 view_friends(global_user_name);
                 break;
-            case 6:
+            case 8:
+                printf("Logging out...\n");
                 log_event(email, "Logged out");
-                printf("Logged out successfully.\n");
                 return;
             default:
-                printf("Invalid option! Try again.\n");
+                printf("Invalid option!\n");
         }
     }
 }

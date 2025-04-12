@@ -146,10 +146,10 @@ void view_friends(const char *user_name) {
     char u1[50], u2[50];
     int found = 0;
 
-    printf("\n👥 Friends of %s:\n", user_name);
+    printf("\nFriends of %s:\n", user_name);
     while (fscanf(fp, "%s %s", u1, u2) != EOF) {
         if (strcasecmp(u1, user_name) == 0) {
-            printf("• %s\n", u2);
+            printf("%s\n", u2);
             found = 1;
         }
     }
