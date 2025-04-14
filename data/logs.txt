@@ -1,0 +1,11 @@
+[2025-04-14 21:27:15] roshan@srmap.edu.in: Registered successfully
+[2025-04-14 21:28:44] koushik@srmap.edu.in: Registered successfully
+[2025-04-14 21:30:03] utsav@srmap.edu.in: Registered successfully
+[2025-04-14 21:30:36] sima@srmap.edu.in: Registered successfully
+[2025-04-14 21:31:33] alex@srmap.edu.in: Registered successfully
+[2025-04-14 21:31:50] roshan@srmap.edu.in: Logged in successfully
+[2025-04-14 21:34:47] roshan: Posted a message
+[2025-04-14 21:40:06] roshan@srmap.edu.in: Logged out
+[2025-04-14 21:41:18] roshan@srmap.edu.in: Logged in successfully
+[2025-04-14 21:41:43] roshan@srmap.edu.in: Logged out
+[2025-04-14 21:42:49] koushik@srmap.edu.in: Logged in successfully

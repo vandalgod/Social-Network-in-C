@@ -9,5 +9,8 @@ int email_exists(const char *email);
 int name_exists(const char *name);
 int validate_gender(const char *gender);
 int validate_hostel_status(const char *status);
+void to_lowercase(char *str);
+void clear_input_buffer();
+void view_profile(char email[]);
 
 #endif

@@ -1,215 +1,247 @@
+#define _GNU_SOURCE /* Add this for strcasestr */
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include "search.h"
 #include "user.h"
-#include "friend.h"
-#include "log.h"
 
-#define MAX_RESULTS 50
-#define MAX_LINE_LENGTH 256
+/* If your system doesn't support strcasestr even with _GNU_SOURCE, 
+   uncomment this implementation */
+/*
+char *strcasestr(const char *haystack, const char *needle) {
+    if (!*needle) return (char*)haystack;
+    
+    size_t haystack_len = strlen(haystack);
+    size_t needle_len = strlen(needle);
+    
+    if (haystack_len < needle_len) return NULL;
+    
+    for (size_t i = 0; i <= haystack_len - needle_len; i++) {
+        if (strncasecmp(haystack + i, needle, needle_len) == 0) {
+            return (char*)(haystack + i);
+        }
+    }
+    
+    return NULL;
+}
+*/
 
-// Helper function to validate email format
-int is_valid_email_format(const char *email) {
-    int at_count = 0;
-    int dot_count = 0;
-    int len = strlen(email);
+// Convert string to lowercase
+void str_tolower(char *str) {
+    for (int i = 0; str[i]; i++) {
+        str[i] = tolower(str[i]);
+    }
+}
+
+void search_by_name(const char *name, const char *current_user_email) {
+    FILE *fp = fopen("data/users.txt", "r");
+    if (!fp) {
+        printf("No users found.\n");
+        return;
+    }
     
-    // Check minimum length
-    if (len < 5) return 0;
+    char username[50], email[50], branch[50], hostel[50], pass[20], gender[10], hostel_status[5];
+    int found = 0;
     
-    // Check for @ and . symbols
-    for (int i = 0; i < len; i++) {
-        if (email[i] == '@') at_count++;
-        if (email[i] == '.') dot_count++;
+    printf("\n--- Search Results for '%s' ---\n", name);
+    
+    while (fscanf(fp, "%s %s %s %s %s %s %s", username, email, branch, hostel, pass, gender, hostel_status) != EOF) {
+        // Skip current user
+        if (strcmp(email, current_user_email) == 0) continue;
         
-        // Check for invalid characters
-        if (!isalnum(email[i]) && email[i] != '@' && email[i] != '.' && email[i] != '_' && email[i] != '-')
-            return 0;
+        // Check if name contains search term (case-insensitive)
+        char temp_username[50];
+        strcpy(temp_username, username);
+        str_tolower(temp_username);
+        
+        char temp_name[50];
+        strcpy(temp_name, name);
+        str_tolower(temp_name);
+        
+        if (strstr(temp_username, temp_name)) {
+            printf("Name: %s\n", username);
+            printf("Email: %s\n", email);
+            printf("Branch: %s\n", branch);
+            if (strcmp(hostel_status, "Yes") == 0) {
+                printf("Hostel: %s\n", hostel);
+            }
+            printf("Gender: %s\n", gender);
+            printf("---------------------------\n");
+            found = 1;
+        }
     }
     
-    // Must have exactly one @ and at least one .
-    if (at_count != 1 || dot_count < 1) return 0;
+    fclose(fp);
     
-    // @ cannot be first or last character
-    if (email[0] == '@' || email[len-1] == '@') return 0;
-    
-    // . cannot be first or last character
-    if (email[0] == '.' || email[len-1] == '.') return 0;
-    
-    return 1;
-}
-
-// Helper function to validate search input
-int validate_search_input(const char *input) {
-    if (input == NULL || strlen(input) == 0) return 0;
-    return 1;
-}
-
-// Search by name
-void search_by_name(const char *name, const char *current_user) {
-    if (!validate_search_input(name)) {
-        printf("Invalid name input.\n");
-        return;
+    if (!found) {
+        printf("No matching users found.\n");
     }
+}
 
+void search_by_email(const char *email_search, const char *current_user_email) {
     FILE *fp = fopen("data/users.txt", "r");
     if (!fp) {
-        printf("Error opening users file.\n");
+        printf("No users found.\n");
         return;
     }
-
-    char line[MAX_LINE_LENGTH];
+    
+    char username[50], email[50], branch[50], hostel[50], pass[20], gender[10], hostel_status[5];
     int found = 0;
+    
+    printf("\n--- Search Results for '%s' ---\n", email_search);
+    
+    while (fscanf(fp, "%s %s %s %s %s %s %s", username, email, branch, hostel, pass, gender, hostel_status) != EOF) {
+        // Skip current user
+        if (strcmp(email, current_user_email) == 0) continue;
+        
+        // Check if email contains search term (case-insensitive)
+        char temp_email[50];
+        strcpy(temp_email, email);
+        str_tolower(temp_email);
+        
+        char temp_search[50];
+        strcpy(temp_search, email_search);
+        str_tolower(temp_search);
+        
+        if (strstr(temp_email, temp_search)) {
+            printf("Name: %s\n", username);
+            printf("Email: %s\n", email);
+            printf("Branch: %s\n", branch);
+            if (strcmp(hostel_status, "Yes") == 0) {
+                printf("Hostel: %s\n", hostel);
+            }
+            printf("Gender: %s\n", gender);
+            printf("---------------------------\n");
+            found = 1;
+        }
+    }
+    
+    fclose(fp);
+    
+    if (!found) {
+        printf("No matching users found.\n");
+    }
+}
 
-    while (fgets(line, sizeof(line), fp)) {
-        char file_name[50], email[50], branch[50], hostel[50], gender[10], hostel_status[5];
-        if (sscanf(line, "%s %s %s %s %*s %s %s", 
-                  file_name, email, branch, hostel, gender, hostel_status) == 6) {
-            if (strstr(file_name, name) && strcmp(email, current_user) != 0) {
-                display_search_results(file_name, email, branch, hostel, gender, hostel_status, current_user);
+void search_by_hostel(const char *hostel_search, const char *current_user_email) {
+    FILE *fp = fopen("data/users.txt", "r");
+    if (!fp) {
+        printf("No users found.\n");
+        return;
+    }
+    
+    char username[50], email[50], branch[50], hostel[50], pass[20], gender[10], hostel_status[5];
+    int found = 0;
+    
+    printf("\n--- Search Results for Hostel '%s' ---\n", hostel_search);
+    
+    while (fscanf(fp, "%s %s %s %s %s %s %s", username, email, branch, hostel, pass, gender, hostel_status) != EOF) {
+        // Skip current user
+        if (strcmp(email, current_user_email) == 0) continue;
+        
+        // Only search users who stay in hostels
+        if (strcmp(hostel_status, "Yes") == 0) {
+            // Check if hostel contains search term (case-insensitive)
+            char temp_hostel[50];
+            strcpy(temp_hostel, hostel);
+            str_tolower(temp_hostel);
+            
+            char temp_search[50];
+            strcpy(temp_search, hostel_search);
+            str_tolower(temp_search);
+            
+            if (strstr(temp_hostel, temp_search)) {
+                printf("Name: %s\n", username);
+                printf("Email: %s\n", email);
+                printf("Branch: %s\n", branch);
+                printf("Hostel: %s\n", hostel);
+                printf("Gender: %s\n", gender);
+                printf("---------------------------\n");
                 found = 1;
             }
         }
     }
+    
     fclose(fp);
-
+    
     if (!found) {
-        printf("No users found with name containing '%s'.\n", name);
+        printf("No matching users found.\n");
     }
-    log_event(current_user, "Searched users by name");
 }
 
-// Search by email
-void search_by_email(const char *email, const char *current_user) {
-    if (!validate_search_input(email) || !is_valid_email_format(email)) {
-        printf("Invalid email input.\n");
-        return;
-    }
-
+void search_by_branch(const char *branch_search, const char *current_user_email) {
     FILE *fp = fopen("data/users.txt", "r");
     if (!fp) {
-        printf("Error opening users file.\n");
+        printf("No users found.\n");
         return;
-    }
-
-    char line[MAX_LINE_LENGTH];
-    int found = 0;
-
-    while (fgets(line, sizeof(line), fp)) {
-        char name[50], file_email[50], branch[50], hostel[50], gender[10], hostel_status[5];
-        if (sscanf(line, "%s %s %s %s %*s %s %s", 
-                  name, file_email, branch, hostel, gender, hostel_status) == 6) {
-            if (strstr(file_email, email) && strcmp(file_email, current_user) != 0) {
-                display_search_results(name, file_email, branch, hostel, gender, hostel_status, current_user);
-                found = 1;
-            }
-        }
-    }
-    fclose(fp);
-
-    if (!found) {
-        printf("No users found with email containing '%s'.\n", email);
-    }
-    log_event(current_user, "Searched users by email");
-}
-
-// Search by hostel
-void search_by_hostel(const char *hostel, const char *current_user) {
-    if (!validate_search_input(hostel)) {
-        printf("Invalid hostel input.\n");
-        return;
-    }
-
-    FILE *fp = fopen("data/users.txt", "r");
-    if (!fp) {
-        printf("Error opening users file.\n");
-        return;
-    }
-
-    char line[MAX_LINE_LENGTH];
-    int found = 0;
-
-    while (fgets(line, sizeof(line), fp)) {
-        char name[50], email[50], branch[50], file_hostel[50], gender[10], hostel_status[5];
-        if (sscanf(line, "%s %s %s %s %*s %s %s", 
-                  name, email, branch, file_hostel, gender, hostel_status) == 6) {
-            if (strcasecmp(hostel_status, "Yes") == 0 && 
-                strstr(file_hostel, hostel) && 
-                strcmp(email, current_user) != 0) {
-                display_search_results(name, email, branch, file_hostel, gender, hostel_status, current_user);
-                found = 1;
-            }
-        }
-    }
-    fclose(fp);
-
-    if (!found) {
-        printf("No users found in hostel '%s'.\n", hostel);
-    }
-    log_event(current_user, "Searched users by hostel");
-}
-
-// Search by branch
-void search_by_branch(const char *branch, const char *current_user) {
-    if (!validate_search_input(branch)) {
-        printf("Invalid branch input.\n");
-        return;
-    }
-
-    FILE *fp = fopen("data/users.txt", "r");
-    if (!fp) {
-        printf("Error opening users file.\n");
-        return;
-    }
-
-    char line[MAX_LINE_LENGTH];
-    int found = 0;
-
-    while (fgets(line, sizeof(line), fp)) {
-        char name[50], email[50], file_branch[50], hostel[50], gender[10], hostel_status[5];
-        if (sscanf(line, "%s %s %s %s %*s %s %s", 
-                  name, email, file_branch, hostel, gender, hostel_status) == 6) {
-            if (strstr(file_branch, branch) && strcmp(email, current_user) != 0) {
-                display_search_results(name, email, file_branch, hostel, gender, hostel_status, current_user);
-                found = 1;
-            }
-        }
-    }
-    fclose(fp);
-
-    if (!found) {
-        printf("No users found in branch '%s'.\n", branch);
-    }
-    log_event(current_user, "Searched users by branch");
-}
-
-// Display search results with friend request option
-void display_search_results(const char *name, const char *email, const char *branch, 
-                          const char *hostel, const char *gender, const char *hostel_status,
-                          const char *current_user) {
-    printf("\nFound User:\n");
-    printf("Name: %s\n", name);
-    printf("Email: %s\n", email);
-    printf("Branch: %s\n", branch);
-    printf("Gender: %s\n", gender);
-    printf("Hostel Status: %s\n", hostel_status);
-    if (strcasecmp(hostel_status, "Yes") == 0) {
-        printf("Hostel: %s\n", hostel);
     }
     
-    // Check if already friends
-    if (are_friends(current_user, name)) {
-        printf("Status: Already friends\n");
-    } else if (is_request_already_sent(current_user, name)) {
-        printf("Status: Friend request pending\n");
-    } else {
-        printf("\nSend friend request to %s? (y/n): ", name);
-        char choice;
-        scanf(" %c", &choice);
-        if (choice == 'y' || choice == 'Y') {
-            send_request(current_user, name);
+    char username[50], email[50], branch[50], hostel[50], pass[20], gender[10], hostel_status[5];
+    int found = 0;
+    
+    printf("\n--- Search Results for Branch '%s' ---\n", branch_search);
+    
+    while (fscanf(fp, "%s %s %s %s %s %s %s", username, email, branch, hostel, pass, gender, hostel_status) != EOF) {
+        // Skip current user
+        if (strcmp(email, current_user_email) == 0) continue;
+        
+        // Check if branch contains search term (case-insensitive)
+        char temp_branch[50];
+        strcpy(temp_branch, branch);
+        str_tolower(temp_branch);
+        
+        char temp_search[50];
+        strcpy(temp_search, branch_search);
+        str_tolower(temp_search);
+        
+        if (strstr(temp_branch, temp_search)) {
+            printf("Name: %s\n", username);
+            printf("Email: %s\n", email);
+            printf("Branch: %s\n", branch);
+            if (strcmp(hostel_status, "Yes") == 0) {
+                printf("Hostel: %s\n", hostel);
+            }
+            printf("Gender: %s\n", gender);
+            printf("---------------------------\n");
+            found = 1;
         }
     }
-    printf("-------------------\n");
+    
+    fclose(fp);
+    
+    if (!found) {
+        printf("No matching users found.\n");
+    }
+}
+
+void search_users(const char *query) {
+    FILE *fp = fopen("data/users.txt", "r");
+    if (!fp) {
+        printf("Error: Cannot open users file.\n");
+        return;
+    }
+
+    char name[50], email[50], branch[50], hostel[50], pass[20], gender[10], hostel_status[5];
+    int found = 0;
+
+    printf("\n--- Search Results ---\n");
+    while (fscanf(fp, "%s %s %s %s %s %s %s", 
+                  name, email, branch, hostel, pass, gender, hostel_status) != EOF) {
+        if (strstr(name, query) || strstr(email, query) || 
+            strstr(branch, query) || strstr(hostel, query)) {
+            found = 1;
+            printf("\nName: %s\n", name);
+            printf("Email: %s\n", email);
+            printf("Branch: %s\n", branch);
+            printf("Hostel: %s\n", hostel);
+            printf("-------------------\n");
+        }
+    }
+
+    fclose(fp);
+
+    if (!found) {
+        printf("No users found matching your search.\n");
+    }
 }
