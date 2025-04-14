@@ -1,9 +1,12 @@
 Social Network using c 
 
-While new registration
-
-- every users name and email must be unique and email should have format xxxx@srmap.edu.in
--asks gender, lives in hostel or not.
--ask for conformation at last.
-new bug:8:27 12th apr
-while searching user through branch if that searched branch relates me it is showing me as well.
+Social networks for srmap students:
+i) to create an user 
+ii) to send friend request 
+iii) to accept/rejected friend request 
+iv) to post a text msg visible to all friends 
+v) maintain all logs 
+vi) search a user to send friend request
+by name
+by branch
+by hostel
