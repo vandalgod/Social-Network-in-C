@@ -9,27 +9,6 @@
 
 extern char global_user_name[50]; // Access global_user_name from user.c
 
-/* If your system doesn't support strcasestr even with _GNU_SOURCE, 
-   uncomment this implementation */
-/*
-char *strcasestr(const char *haystack, const char *needle) {
-    if (!*needle) return (char*)haystack;
-    
-    size_t haystack_len = strlen(haystack);
-    size_t needle_len = strlen(needle);
-    
-    if (haystack_len < needle_len) return NULL;
-    
-    for (size_t i = 0; i <= haystack_len - needle_len; i++) {
-        if (strncasecmp(haystack + i, needle, needle_len) == 0) {
-            return (char*)(haystack + i);
-        }
-    }
-    
-    return NULL;
-}
-*/
-
 // Convert string to lowercase
 void str_tolower(char *str) {
     for (int i = 0; str[i]; i++) {

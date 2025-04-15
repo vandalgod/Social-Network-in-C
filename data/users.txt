@@ -1,5 +1,6 @@
-roshan roshan@srmap.edu.in cse vedavathi roshan Male Yes
-koushik koushik@srmap.edu.in eee vedavathi koushik Male Yes
-utsav utsav@srmap.edu.in civil ganga koushik Male Yes
-sima sima@srmap.edu.in cse N/A sima Female No
-alex alex@srmap.edu.in eee ganga alex Male Yes
+cvs venkatasai_baki@srmap.edu.in cse ganga cvs Male Yes
+koushik koushik@srmap.edu.in cse vedavathi koushik Male Yes
+john john@srmap.edu.in eee vedavathi john Male Yes
+alex alex@srmap.edu.in cse N/A alex Female No
+alex1 alex1@srmap.edu.in eee N/A alex1 Male No
+john1@srmap.edu.in john1@srmap.edu.in ece narmada john1 Male Yes

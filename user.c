@@ -334,7 +334,7 @@ int login_user(char email[]) {
 void user_dashboard(char email[]) {
     int choice;
     char friend_name[50];
-    char search_query[50];
+    char search_query[50],search_name[50], search_email[50], search_hostel[50], search_branch[50];
     
     while (1) {
         printf("\n--- %s's Dashboard ---\n", global_user_name);
@@ -351,10 +351,10 @@ void user_dashboard(char email[]) {
         
         if (scanf("%d", &choice) != 1) {
             printf("Invalid input. Please enter a number.\n");
-            while (getchar() != '\n'); // Clear input buffer
+            clear_input_buffer(); // Clear input buffer
             continue;
         }
-        while (getchar() != '\n'); // Clear input buffer
+        clear_input_buffer(); // Clear input buffer
 
         switch (choice) {
             case 1:
@@ -362,7 +362,12 @@ void user_dashboard(char email[]) {
                 break;
             case 2:
                 printf("Enter friend's name: ");
-                scanf("%s", friend_name);
+                if (scanf("%s", friend_name) != 1) {
+                    printf("Error reading input.\n");
+                    clear_input_buffer();
+                    continue;
+                }
+                clear_input_buffer();
                 send_request(global_user_name, friend_name);
                 break;
             case 3:
@@ -378,9 +383,68 @@ void user_dashboard(char email[]) {
                 view_friend_messages(global_user_name);
                 break;
             case 7:
-                printf("Enter search query: ");
-                scanf("%s", search_query);
-                search_users(search_query);
+                printf("\n--- Search Users ---\n");
+                printf("1. Search by Name\n");
+                printf("2. Search by Email\n");
+                printf("3. Search by Hostel\n");
+                printf("4. Search by Branch\n");
+                printf("Choose search type (1-4): ");
+                
+                int search_choice;
+                if (scanf("%d", &search_choice) != 1) {
+                    printf("Invalid input! Please enter a number between 1 and 4.\n");
+                    clear_input_buffer();
+                    continue;
+                }
+                clear_input_buffer();
+                
+                if (search_choice < 1 || search_choice > 4) {
+                    printf("Invalid option! Please enter a number between 1 and 4.\n");
+                    continue;
+                }
+                
+                switch (search_choice) {
+                    case 1:
+                        printf("Enter name to search: ");
+                        if (scanf("%s", search_name) != 1) {
+                            printf("Error reading input.\n");
+                            clear_input_buffer();
+                            continue;
+                        }
+                        clear_input_buffer();
+                        search_by_name(search_name, email);
+                        break;
+                    case 2:
+                        printf("Enter email to search: ");
+                        if (scanf("%s", search_email) != 1) {
+                            printf("Error reading input.\n");
+                            clear_input_buffer();
+                            continue;
+                        }
+                        clear_input_buffer();
+                        search_by_email(search_email, email);
+                        break;
+                    case 3:
+                        printf("Enter hostel to search: ");
+                        if (scanf("%s", search_hostel) != 1) {
+                            printf("Error reading input.\n");
+                            clear_input_buffer();
+                            continue;
+                        }
+                        clear_input_buffer();
+                        search_by_hostel(search_hostel, email);
+                        break;
+                    case 4:
+                        printf("Enter branch to search: ");
+                        if (scanf("%s", search_branch) != 1) {
+                            printf("Error reading input.\n");
+                            clear_input_buffer();
+                            continue;
+                        }
+                        clear_input_buffer();
+                        search_by_branch(search_branch, email);
+                        break;
+                }
                 break;
             case 8:
                 view_friends(global_user_name);
