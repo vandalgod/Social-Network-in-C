@@ -11,13 +11,6 @@
 int main() {
     // Ensure data directory exists at program start
     ensure_data_directory();
-     // Ensure data directory exists at startup
-    #ifdef _WIN32
-        system("if not exist data mkdir data");
-    #else
-        system("mkdir -p data");
-    #endif
-
     
     int option;
     char email[50];

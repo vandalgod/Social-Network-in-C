@@ -62,7 +62,7 @@ int email_exists(const char *email) {
     to_lowercase(email_lower);
     
     while (fscanf(fp, "%s %s %s %s %s %s %s", name, file_email, branch, hostel, pass, gender, hostel_status) != EOF) {
-        // Convert stored email to lowercase for comparison
+        // Convert stored email to lowercase 
         strcpy(file_email_lower, file_email);
         to_lowercase(file_email_lower);
         
@@ -143,7 +143,7 @@ void register_user() {
             email[len-1] = '\0';
         }
 
-        to_lowercase(email);  // ✅ Normalize email
+        to_lowercase(email);  
 
         if (!validate_email_format(email)) {
             printf("Invalid email format! Email must end with @srmap.edu.in\n");
@@ -385,21 +385,20 @@ void user_dashboard(char email[]) {
             case 7:
                 printf("\n--- Search Users ---\n");
                 printf("1. Search by Name\n");
-                printf("2. Search by Email\n");
-                printf("3. Search by Hostel\n");
-                printf("4. Search by Branch\n");
-                printf("Choose search type (1-4): ");
+                printf("2. Search by Hostel\n");
+                printf("3. Search by Branch\n");
+                printf("Choose search type (1-3): ");
                 
                 int search_choice;
                 if (scanf("%d", &search_choice) != 1) {
-                    printf("Invalid input! Please enter a number between 1 and 4.\n");
+                    printf("Invalid input! Please enter a number between 1 and 3.\n");
                     clear_input_buffer();
                     continue;
                 }
                 clear_input_buffer();
                 
-                if (search_choice < 1 || search_choice > 4) {
-                    printf("Invalid option! Please enter a number between 1 and 4.\n");
+                if (search_choice < 1 || search_choice > 3) {
+                    printf("Invalid option! Please enter a number between 1 and 3.\n");
                     continue;
                 }
                 
@@ -415,35 +414,26 @@ void user_dashboard(char email[]) {
                         search_by_name(search_name, email);
                         break;
                     case 2:
-                        printf("Enter email to search: ");
-                        if (scanf("%s", search_email) != 1) {
-                            printf("Error reading input.\n");
-                            clear_input_buffer();
-                            continue;
-                        }
+                    printf("Enter hostel to search: ");
+                    if (scanf("%s", search_hostel) != 1) {
+                        printf("Error reading input.\n");
                         clear_input_buffer();
-                        search_by_email(search_email, email);
-                        break;
+                        continue;
+                    }
+                    clear_input_buffer();
+                    search_by_hostel(search_hostel, email);
+                    break;
                     case 3:
-                        printf("Enter hostel to search: ");
-                        if (scanf("%s", search_hostel) != 1) {
-                            printf("Error reading input.\n");
-                            clear_input_buffer();
-                            continue;
-                        }
+                    printf("Enter branch to search: ");
+                    if (scanf("%s", search_branch) != 1) {
+                        printf("Error reading input.\n");
                         clear_input_buffer();
-                        search_by_hostel(search_hostel, email);
-                        break;
-                    case 4:
-                        printf("Enter branch to search: ");
-                        if (scanf("%s", search_branch) != 1) {
-                            printf("Error reading input.\n");
-                            clear_input_buffer();
-                            continue;
-                        }
-                        clear_input_buffer();
-                        search_by_branch(search_branch, email);
-                        break;
+                        continue;
+                    }
+                    clear_input_buffer();
+                    search_by_branch(search_branch, email);
+                    break;
+                        
                 }
                 break;
             case 8:
